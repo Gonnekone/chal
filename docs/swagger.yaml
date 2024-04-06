@@ -1,0 +1,143 @@
+definitions:
+  internal_http-server_handlers_get.Request:
+    properties:
+      mark:
+        example: BMW
+        type: string
+      model:
+        example: X5
+        type: string
+      ownerName:
+        example: Ivan
+        type: string
+      ownerPatronymic:
+        example: Ivanovich
+        type: string
+      ownerSurname:
+        example: Ivanov
+        type: string
+      regNum:
+        example: AAA111
+        type: string
+      year:
+        example: 2020
+        type: integer
+    type: object
+  internal_http-server_handlers_save.Request:
+    properties:
+      regNums:
+        example:
+        - AAA111
+        - ' BBB222'
+        - ' CCC333'
+        items:
+          type: string
+        type: array
+    type: object
+  internal_http-server_handlers_update.Request:
+    properties:
+      id:
+        type: integer
+      mark:
+        type: string
+      model:
+        type: string
+      regNum:
+        type: string
+      year:
+        type: integer
+    type: object
+host: localhost:8082
+info:
+  contact:
+    email: opacha2018@yandex.ru
+    url: https://t.me/Gonnekone
+  description: This is a testovoe zadanie.
+  title: Cars catalog API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Retrieves a list of cars based on specified filters.
+      parameters:
+      - description: Request body containing filters
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http-server_handlers_get.Request'
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: client error
+      summary: Get cars
+      tags:
+      - cars
+    patch:
+      consumes:
+      - application/json
+      description: Updates the details of a car with the provided ID.
+      parameters:
+      - description: Car ID to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body containing updated car details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http-server_handlers_update.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: client error
+      summary: Update car
+      tags:
+      - cars
+    post:
+      consumes:
+      - application/json
+      description: Saves a list of cars with the provided registration numbers.
+      parameters:
+      - description: Request body containing registration numbers
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_http-server_handlers_save.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: client error
+      summary: Save cars
+      tags:
+      - cars
+  /{id}:
+    delete:
+      description: Deletes a car by its identifier.
+      parameters:
+      - description: Car identifier
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: client error
+      summary: Delete a car
+      tags:
+      - cars
+schemes:
+- http
+swagger: "2.0"
