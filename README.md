@@ -6,7 +6,7 @@ task run
 ```
 
 ### Update swagger
-To run the project, execute the following command:
+To update swagger, execute the following command:
 ```sh
 task swag
 ```
