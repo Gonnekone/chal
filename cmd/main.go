@@ -58,7 +58,7 @@ func main() {
 	router.Post("/", save.New(log, storage))
 	router.Get("/", get.New(log, storage))
 	router.Patch("/", update.New(log, storage))
-	router.Delete("/{id}", del.New(log, storage))
+	router.Delete("/", del.New(log, storage))
 
 	log.Info("starting server", slog.String("address", cfg.HTTPServer.Address))
 

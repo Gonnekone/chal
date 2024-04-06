@@ -34,6 +34,20 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/internal_http-server_handlers_get.Request"
                         }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "offset",
+                        "name": "offset",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -77,6 +91,30 @@ const docTemplate = `{
                     }
                 }
             },
+            "delete": {
+                "description": "Deletes a car by its identifier.",
+                "tags": [
+                    "cars"
+                ],
+                "summary": "Delete a car",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Car identifier",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "description": "client error"
+                    }
+                }
+            },
             "patch": {
                 "description": "Updates the details of a car with the provided ID.",
                 "consumes": [
@@ -105,32 +143,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/internal_http-server_handlers_update.Request"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    },
-                    "400": {
-                        "description": "client error"
-                    }
-                }
-            }
-        },
-        "/{id}": {
-            "delete": {
-                "description": "Deletes a car by its identifier.",
-                "tags": [
-                    "cars"
-                ],
-                "summary": "Delete a car",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Car identifier",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {

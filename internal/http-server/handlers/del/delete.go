@@ -8,7 +8,6 @@ import (
 
 	resp "github.com/Gonnekone/challenge/internal/lib/api/response"
 	"github.com/Gonnekone/challenge/internal/lib/logger/sl"
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 )
@@ -27,7 +26,7 @@ type Response struct {
 // @Param id path int true "Car identifier"
 // @Success 200 "ok"
 // @Failure 400 "client error"
-// @Router /{id} [delete]
+// @Router / [delete]
 func New(log *slog.Logger, carDeleter CarDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.delete.New"
@@ -37,7 +36,7 @@ func New(log *slog.Logger, carDeleter CarDeleter) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		idStr := chi.URLParam(r, "id")
+		idStr := r.URL.Query().Get("id")
 		if idStr == "" {
 			log.Error("id is empty")
 

@@ -9,7 +9,6 @@ import (
 	"github.com/Gonnekone/challenge/internal/domain/models"
 	resp "github.com/Gonnekone/challenge/internal/lib/api/response"
 	"github.com/Gonnekone/challenge/internal/lib/logger/sl"
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 )
@@ -39,6 +38,8 @@ type Response struct {
 // @Description Retrieves a list of cars based on specified filters.
 // @Tags cars
 // @Param body body Request true "Request body containing filters"
+// @Param limit path int true "limit"
+// @Param offset path int true "offset"
 // @Success 200 "ok"
 // @Failure 400 "client error"
 // @Router / [get]
@@ -86,11 +87,11 @@ func New(log *slog.Logger, carGetter CarGetter) http.HandlerFunc {
 			params["patronymic"] = req.OwnerPatronymic
 		}
 
-		limitStr := chi.URLParam(r, "limit")
+		limitStr := r.URL.Query().Get("limit")
 		if limitStr == "" {
 			limitStr = limitDefault
 		}
-		offsetStr := chi.URLParam(r, "offset")
+		offsetStr := r.URL.Query().Get("offset")
 		if offsetStr == "" {
 			offsetStr = offsetDefault
 		}

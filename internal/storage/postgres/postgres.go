@@ -2,8 +2,10 @@ package postgres
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net/http"
 
 	"github.com/Gonnekone/challenge/internal/domain/models"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -74,9 +76,10 @@ func (s *Storage) GetCar(ctx context.Context, log *slog.Logger, filters map[stri
 				query += fmt.Sprintf(" %s = %d AND", k, v)
 			}
 		}
+
+		query = query[:len(query)-3]
 	}
 
-	query = query[:len(query)-3]
     query += " LIMIT $1::bigint OFFSET $2::bigint"
 	
 	log.Debug("getting cars", slog.String("query", query))
@@ -137,7 +140,7 @@ func (s *Storage) DeleteCar(ctx context.Context, log *slog.Logger, id int64) err
 		slog.String("op", op),
 	)
 
-	log.Debug(fmt.Sprintf("updating car with id = %d", id), slog.String("query", "DELETE FROM car WHERE id = $1"))
+	log.Debug(fmt.Sprintf("deleting car with id = %d", id), slog.String("query", "DELETE FROM car WHERE id = $1"))
 
 	_, err := s.db.Exec(ctx, "DELETE FROM car WHERE id = $1", id)
 	return err
@@ -181,7 +184,7 @@ func (s *Storage) SaveCar(ctx context.Context, log *slog.Logger, regNums []strin
 	query := "INSERT INTO car (regNum, mark, model, year, owner_id) VALUES ($1, $2, $3, $4, $5)"
 
 	for _, regNum := range regNums {
-		car, err := fetchCarInfoTest(ctx, regNum)
+		car, err := fetchCarInfo(ctx, log, regNum)
 		if err != nil {
 			return fmt.Errorf("error fetching car info for regNum %s: %w", regNum, err)
 		}
@@ -203,85 +206,95 @@ func (s *Storage) SaveCar(ctx context.Context, log *slog.Logger, regNums []strin
 	return nil
 }
 
-// func fetchCarInfo(ctx context.Context, regNum string) (models.Car, error) {
-// 	apiURL := fmt.Sprintf("http://example.com/info?regNum=%s", regNum)
+func fetchCarInfo(ctx context.Context, log *slog.Logger, regNum string) (models.Car, error) {
+	const op = "postgres.fetchCarInfo"
 
-// 	req, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
-// 	if err != nil {
-// 		return models.Car{}, err
-// 	}
+	log = log.With(
+		slog.String("op", op),
+	)
 
-// 	resp, err := http.DefaultClient.Do(req)
-// 	if err != nil {
-// 		return models.Car{}, err
-// 	}
-// 	defer resp.Body.Close()
+	apiURL := fmt.Sprintf("http://localhost:8086/car?regNum=%s", regNum)
 
-// 	if resp.StatusCode != http.StatusOK {
-// 		return models.Car{}, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-// 	}
+	log.Debug(fmt.Sprintf("fetching car with regNum = %s", regNum), slog.String("apiURL", apiURL))
 
-// 	var car models.Car
-// 	if err := json.NewDecoder(resp.Body).Decode(&car); err != nil {
-// 		return models.Car{}, err
-// 	}
-
-// 	return car, nil
-// }
-
-func fetchCarInfoTest(ctx context.Context, regNum string) (models.Car, error) {
-	cache := make(map[string]models.Car)
-
-	car1 := models.Car {
-		RegNum: "X123XX150",
-		Mark:   "Lada",
-		Model:  "Vesta",
-		Owner: models.People {
-			Name:      "John",
-			Surname:   "Doe",
-			Patronymic: "Smith",
-		},
-	}
-	
-	car2 := models.Car {
-		RegNum: "A456BC789",
-		Mark:   "Toyota",
-		Model:  "Corolla",
-		Year:   2015,
-		Owner: models.People {
-			Name:    "Alice",
-			Surname: "Johnson",
-		},
-	}
-	
-	car3 := models.Car {
-		RegNum: "H789GF123",
-		Mark:   "BMW",
-		Model:  "X5",
-		Year:   2019,
-		Owner: models.People {
-			Name:    "Bob",
-			Surname: "Brown",
-			Patronymic: "Lee",
-		},
+	req, err := http.NewRequestWithContext(ctx, "GET", apiURL, nil)
+	if err != nil {
+		return models.Car{}, err
 	}
 
-	car4 := models.Car{
-		RegNum: "Z456BC789",
-		Mark:   "Toyota",
-		Model:  "Mark 2",
-		Year:   1999,
-		Owner: models.People{
-			Name:    "Alice",
-			Surname: "Johnson",
-		},
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return models.Car{}, err
 	}
-	
-	
-	cache[car1.RegNum] = car1
-	cache[car2.RegNum] = car2
-	cache[car3.RegNum] = car3
-	cache[car4.RegNum] = car4
+	defer resp.Body.Close()
 
-	return cache[regNum], nil
+	if resp.StatusCode != http.StatusOK {
+		return models.Car{}, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	var car models.Car
+	if err := json.NewDecoder(resp.Body).Decode(&car); err != nil {
+		return models.Car{}, err
+	}
+
+	log.Debug("car fetched", slog.Any("car", car))
+
+	return car, nil
 }
+
+// func fetchCarInfoTest(ctx context.Context, regNum string) (models.Car, error) {
+// 	cache := make(map[string]models.Car)
+
+// 	car1 := models.Car {
+// 		RegNum: "X123XX150",
+// 		Mark:   "Lada",
+// 		Model:  "Vesta",
+// 		Owner: models.People {
+// 			Name:      "John",
+// 			Surname:   "Doe",
+// 			Patronymic: "Smith",
+// 		},
+// 	}
+	
+// 	car2 := models.Car {
+// 		RegNum: "A456BC789",
+// 		Mark:   "Toyota",
+// 		Model:  "Corolla",
+// 		Year:   2015,
+// 		Owner: models.People {
+// 			Name:    "Alice",
+// 			Surname: "Johnson",
+// 		},
+// 	}
+	
+// 	car3 := models.Car {
+// 		RegNum: "H789GF123",
+// 		Mark:   "BMW",
+// 		Model:  "X5",
+// 		Year:   2019,
+// 		Owner: models.People {
+// 			Name:    "Bob",
+// 			Surname: "Brown",
+// 			Patronymic: "Lee",
+// 		},
+// 	}
+
+// 	car4 := models.Car {
+// 		RegNum: "Z456BC789",
+// 		Mark:   "Toyota",
+// 		Model:  "Mark 2",
+// 		Year:   1999,
+// 		Owner: models.People{
+// 			Name:    "Alice",
+// 			Surname: "Johnson",
+// 		},
+// 	}
+	
+	
+// 	cache[car1.RegNum] = car1
+// 	cache[car2.RegNum] = car2
+// 	cache[car3.RegNum] = car3
+// 	cache[car4.RegNum] = car4
+
+// 	return cache[regNum], nil
+// }

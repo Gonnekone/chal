@@ -57,6 +57,22 @@ info:
   version: "1.0"
 paths:
   /:
+    delete:
+      description: Deletes a car by its identifier.
+      parameters:
+      - description: Car identifier
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: client error
+      summary: Delete a car
+      tags:
+      - cars
     get:
       description: Retrieves a list of cars based on specified filters.
       parameters:
@@ -66,6 +82,16 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/internal_http-server_handlers_get.Request'
+      - description: limit
+        in: path
+        name: limit
+        required: true
+        type: integer
+      - description: offset
+        in: path
+        name: offset
+        required: true
+        type: integer
       responses:
         "200":
           description: ok
@@ -119,23 +145,6 @@ paths:
         "400":
           description: client error
       summary: Save cars
-      tags:
-      - cars
-  /{id}:
-    delete:
-      description: Deletes a car by its identifier.
-      parameters:
-      - description: Car identifier
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: ok
-        "400":
-          description: client error
-      summary: Delete a car
       tags:
       - cars
 schemes:
