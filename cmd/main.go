@@ -93,6 +93,10 @@ func main() {
 		return
 	}
 
+	log.Info("closing storage")
+
+	storage.Close()
+
 	log.Info("server stopped")
 }
 

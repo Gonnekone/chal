@@ -58,6 +58,10 @@ func New(log *slog.Logger, dbURL string) (*Storage, error) {
 	return &Storage{db: pool}, nil
 }
 
+func (s *Storage) Close() {
+	s.db.Close()
+}
+
 func (s *Storage) GetCar(ctx context.Context, log *slog.Logger, filters map[string]interface{}, limit, offset int) ([]models.Car, error) {
     const op = "postgres.getCar"
 
