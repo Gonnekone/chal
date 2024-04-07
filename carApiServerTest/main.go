@@ -65,7 +65,7 @@ var cache = map[string]Car{
 
 
 func main() {
-	http.HandleFunc("/car", getCarByRegNum)
+	http.HandleFunc("/info", getCarByRegNum)
 	http.ListenAndServe(":8086", nil)
 }
 

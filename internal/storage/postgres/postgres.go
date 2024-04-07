@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/Gonnekone/challenge/internal/domain/models"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -213,7 +214,7 @@ func fetchCarInfo(ctx context.Context, log *slog.Logger, regNum string) (models.
 		slog.String("op", op),
 	)
 
-	apiURL := fmt.Sprintf("http://localhost:8086/car?regNum=%s", regNum)
+	apiURL := fmt.Sprintf(os.Getenv("REQUEST_API") + regNum)
 
 	log.Debug(fmt.Sprintf("fetching car with regNum = %s", regNum), slog.String("apiURL", apiURL))
 
