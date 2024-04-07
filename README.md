@@ -10,3 +10,5 @@ To update swagger, execute the following command:
 ```sh
 task swag
 ```
+
+Прошу дать фидбек
