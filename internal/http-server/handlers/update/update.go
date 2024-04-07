@@ -33,7 +33,6 @@ type Request struct {
 // @Tags cars
 // @Accept json
 // @Produce json
-// @Param id path int true "Car ID to update"
 // @Param body body Request true "Request body containing updated car details"
 // @Success 200 "ok"
 // @Failure 400 "client error"

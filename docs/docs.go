@@ -39,15 +39,13 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "limit",
                         "name": "limit",
-                        "in": "path",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "offset",
                         "name": "offset",
-                        "in": "path",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -102,7 +100,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Car identifier",
                         "name": "id",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -128,13 +126,6 @@ const docTemplate = `{
                 ],
                 "summary": "Update car",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Car ID to update",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Request body containing updated car details",
                         "name": "body",
@@ -200,8 +191,8 @@ const docTemplate = `{
                     },
                     "example": [
                         "AAA111",
-                        " BBB222",
-                        " CCC333"
+                        "BBB222",
+                        "CCC333"
                     ]
                 }
             }

@@ -38,8 +38,8 @@ type Response struct {
 // @Description Retrieves a list of cars based on specified filters.
 // @Tags cars
 // @Param body body Request true "Request body containing filters"
-// @Param limit path int true "limit"
-// @Param offset path int true "offset"
+// @Param limit query int false "limit"
+// @Param offset query int false "offset"
 // @Success 200 "ok"
 // @Failure 400 "client error"
 // @Router / [get]
