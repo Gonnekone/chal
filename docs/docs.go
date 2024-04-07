@@ -101,6 +101,7 @@ const docTemplate = `{
                         "description": "Car identifier",
                         "name": "id",
                         "in": "query",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -191,6 +192,8 @@ const docTemplate = `{
                     },
                     "example": [
                         "AAA111",
+                        "BBB222",
+                        "CCC333"
                         "BBB222",
                         "CCC333"
                     ]
