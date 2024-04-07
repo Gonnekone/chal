@@ -35,14 +35,14 @@
                         "type": "integer",
                         "description": "limit",
                         "name": "limit",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
                         "description": "offset",
                         "name": "offset",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -98,7 +98,7 @@
                         "type": "integer",
                         "description": "Car identifier",
                         "name": "id",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -124,13 +124,6 @@
                 ],
                 "summary": "Update car",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Car ID to update",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Request body containing updated car details",
                         "name": "body",
@@ -196,8 +189,8 @@
                     },
                     "example": [
                         "AAA111",
-                        " BBB222",
-                        " CCC333"
+                        "BBB222",
+                        "CCC333"
                     ]
                 }
             }

@@ -16,7 +16,7 @@ type CarSaver interface {
 }
 
 type Request struct {
-	RegNums []string `json:"regNums" example:"AAA111, BBB222, CCC333"`
+	RegNums []string `json:"regNums" example:"AAA111,BBB222,CCC333"`
 }
 
 type Response struct {

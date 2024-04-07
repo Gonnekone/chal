@@ -23,7 +23,7 @@ type Response struct {
 // @Summary Delete a car
 // @Description Deletes a car by its identifier.
 // @Tags cars
-// @Param id path int true "Car identifier"
+// @Param id query int true "Car identifier"
 // @Success 200 "ok"
 // @Failure 400 "client error"
 // @Router / [delete]

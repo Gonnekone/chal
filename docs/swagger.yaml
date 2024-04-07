@@ -28,8 +28,8 @@ definitions:
       regNums:
         example:
         - AAA111
-        - ' BBB222'
-        - ' CCC333'
+        - BBB222
+        - CCC333
         items:
           type: string
         type: array
@@ -61,7 +61,7 @@ paths:
       description: Deletes a car by its identifier.
       parameters:
       - description: Car identifier
-        in: path
+        in: query
         name: id
         required: true
         type: integer
@@ -83,12 +83,12 @@ paths:
         schema:
           $ref: '#/definitions/internal_http-server_handlers_get.Request'
       - description: limit
-        in: path
+        in: query
         name: limit
         required: true
         type: integer
       - description: offset
-        in: path
+        in: query
         name: offset
         required: true
         type: integer
@@ -105,11 +105,6 @@ paths:
       - application/json
       description: Updates the details of a car with the provided ID.
       parameters:
-      - description: Car ID to update
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: Request body containing updated car details
         in: body
         name: body
